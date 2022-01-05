@@ -9,8 +9,16 @@ class PRPDefinition:
         self._def_type = def_type
         self._def_data = def_data
 
+    @staticmethod
+    def from_json(json_definition):
+        prp_def_name: str = json_definition['name']
+        prp_def_type: PRPDefinitionType = PRPDefinitionType[json_definition['type'].split('.')[1]]
+        prp_def_data = json_definition['data']
+
+        return PRPDefinition(prp_def_name, prp_def_type, prp_def_data)
+
     def __dict__(self):
-        return {'name': self.def_name, 'type': self.def_type, 'data': self.def_data}
+        return {'name': self.def_name, 'type': str(self.def_type), 'data': self.def_data}
 
     @property
     def def_name(self) -> str:

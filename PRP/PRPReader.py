@@ -17,6 +17,10 @@ class PRPReader:
         self._prp_properties: Optional[PRPByteCode] = None
 
     @property
+    def is_raw(self) -> bool:
+        return self._prp_is_raw
+
+    @property
     def flags(self) -> int:
         return self._prp_flags
 
@@ -42,7 +46,7 @@ class PRPReader:
             self._prp_data_offset = int.from_bytes(prp_file.read(0x4), "little")
             # Validate header
             if not self._prp_magic_bytes == b"IOPacked v0.1\x00":
-                return
+                raise PRPStructureError("Invalid magic bytes signature", 0)
 
             # Read symbols table
             prp_file.seek(0x1F, 0)  # Seek to symbols region

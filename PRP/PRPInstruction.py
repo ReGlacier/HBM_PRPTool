@@ -20,10 +20,35 @@ class PRPInstruction:
 
     op_data = property(_get_op_data, _set_op_data)
 
+    @staticmethod
+    def from_json(json_property):
+        prp_op_code: PRPOpCode = PRPOpCode[json_property['op_code'].split('.')[1]]
+        prp_op_data = json_property['op_data']
+
+        if prp_op_data is None:
+            prp_op_data = object()
+
+        if prp_op_code == PRPOpCode.RawData or prp_op_code == PRPOpCode.NamedRawData:
+            prp_res_data = {
+                'length': len(prp_op_data),
+                'data': bytes()
+            }
+
+            for prp_op_byte in prp_op_data:
+                prp_res_data['data'] += prp_op_byte.to_bytes(1, "little")
+
+            prp_op_data = prp_res_data
+
+        return PRPInstruction(prp_op_code, prp_op_data)
+
     def __dict__(self):
+        res_data = self.op_data
+        if self.op_code == PRPOpCode.RawData or self.op_code == PRPOpCode.NamedRawData:
+            res_data = [x for x in self.op_data['data']]
+
         return {
             'op_code': str(self.op_code),
-            'op_data':     self.op_data
+            'op_data': res_data
         }
 
     def to_bytes(self, flags: int, token_table: [str]) -> bytes:
