@@ -7,6 +7,8 @@ PRP Tool
 
 PRP Tool is a utility that allows to you edit properties of entities on the level in "Hitman Blood Money".
 
+More details about format [here](https://github.com/ReGlacier/ReHitmanTools/issues/3#issuecomment-769404149)
+
 Usage
 -----
 
